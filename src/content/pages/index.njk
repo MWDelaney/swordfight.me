@@ -1,17 +1,48 @@
 ---
 permalink: /
-title: Up to zero! 🪐
+title: Swordfight.me
 ---
 
-<p>Get started:</p>
-<ul>
-  <li>Edit this page: <code>src/pages/index.md</code></li>
-  <li>Add or edit navigation: <code>src/data/navigation.json</code></li>
-  <li>Change colors and styles: <code>src/assets/styles/</code></li>
-</ul>
+<sword-fight>
+  <article id="whatYouSee" class="what-you-see placeholder-glow">
+    <section class="what-you-see-content">
+      <h1>What you see</h1>
 
-<hr>
+      <dl>
+        <dt>Life Points:</dt>
+        <dd id="lifePoints"><span class="placeholder col-1"></span></dd>
+      </dl>
 
-<figure>
-  {% image "/assets/images/favicon.svg", "ZeroPoint Favicon" %}
-</figure>
+      <h2><span class="placeholder col-8"></span></h2>
+    </section>
+  </article>
+
+  <aside id="characterSheet" class="character-sheet" data-character="human-fighter">
+    <section id="charadterSheetProfile" class="character-sheet-profile">
+      <h1>Character Sheet</h1>
+      <h2>{{ humanFighter.name }}</h2>
+
+      <dl>
+        <dt>Life Points:</dt>
+        <dd id="lifePoints"><span class="placeholder col-1"></span></dd>
+      </dl>
+
+    </section>
+
+    <ul id="characterSheetMovesList" class="character-sheet-moves-list">
+      {% for move in humanFighter.moves %}
+        <li class="character-sheet-moves-list-item">
+          <a
+            class="character-sheet-moves-list-link"
+            href="#{{ move.id }}"
+            data-range="{{ move.range }}"
+            data-type="{{ data.type }}"
+          >
+            {{ move.tag }} - {{ move.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </aside>
+</sword-fight>
+{% script "src/assets/scripts/webcomponents/sword-fight.js" | url %}
