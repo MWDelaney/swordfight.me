@@ -13,9 +13,3 @@
   to = "/?round=:round&move=:move"
   status = 200
   force = true
-
-[[redirects]]
-  from = "/:round/:move/"
-  to = "/?round=:round&move=:move"
-  status = 200
-  force = true

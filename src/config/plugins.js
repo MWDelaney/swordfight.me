@@ -26,6 +26,7 @@ module.exports = {
     let { nodeResolve } = require("@rollup/plugin-node-resolve");
     let replace = require("@rollup/plugin-replace");
     let commonjs = require("@rollup/plugin-commonjs");
+    let json = require("@rollup/plugin-json");
 
     let config = {
       // Set a more descriptive shortcode
@@ -33,9 +34,10 @@ module.exports = {
       // Configure the output
       rollupOptions: {
         output: {
-          format: "cjs",
+          format: "esm",
           sourcemap: true,
-          dir: 'public/assets/scripts'
+          dir: 'public/assets/scripts',
+          exports: 'auto'
         },
 
         // Configure the plugins
@@ -47,6 +49,7 @@ module.exports = {
           nodeResolve(),
           terser(),
           commonjs(),
+          json(),
         ],
       }
     };
