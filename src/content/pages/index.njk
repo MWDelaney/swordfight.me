@@ -8,41 +8,29 @@ title: Swordfight.me
     <section class="what-you-see-content">
       <h1>What you see</h1>
 
-      <dl>
-        <dt>Life Points:</dt>
-        <dd id="lifePoints"><span class="placeholder col-1"></span></dd>
-      </dl>
-
-      <h2><span class="placeholder col-8"></span></h2>
+      <h2 id="viewName"><span class="placeholder col-8"></span></h2>
     </section>
   </article>
+
+  <article id="yourStatus" class="your-status placeholder-glow">
+    <section class="your-status-content">
+      <h1>Your Status</h1>
+
+      <h2 id="whatHappened"><span class="placeholder col-8"></span></h2>
+    </section>
 
   <aside id="characterSheet" class="character-sheet" data-character="human-fighter">
     <section id="charadterSheetProfile" class="character-sheet-profile">
       <h1>Character Sheet</h1>
       <h2>{{ humanFighter.name }}</h2>
-
-      <dl>
-        <dt>Life Points:</dt>
-        <dd id="lifePoints"><span class="placeholder col-1"></span></dd>
-      </dl>
-
     </section>
 
     <ul id="characterSheetMovesList" class="character-sheet-moves-list">
-      {% for move in humanFighter.moves %}
-        <li class="character-sheet-moves-list-item">
-          <a
-            class="character-sheet-moves-list-link"
-            href="#{{ move.id }}"
-            data-range="{{ move.range }}"
-            data-type="{{ data.type }}"
-          >
-            {{ move.tag }} - {{ move.name }}
-          </a>
-        </li>
-      {% endfor %}
     </ul>
   </aside>
+  <section id="fight">
+    <input id="opponentsMove" class="opponents-move" type="number" value="62" />
+    <button id="fightButton" class="fight-button" data-action="fight">Fight</button>
+  </section>
 </sword-fight>
 {% script "src/assets/scripts/webcomponents/sword-fight.js" | url %}
