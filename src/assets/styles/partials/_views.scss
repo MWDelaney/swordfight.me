@@ -1,0 +1,43 @@
+.what-you-see,
+.what-your-opponent-sees {
+  @extend .card, .mb-5;
+
+  .what-you-see-content,
+  .what-your-opponent-sees-content {
+    @extend .card-body;
+  }
+}
+
+#yourView-tab {
+  --bs-nav-tabs-link-active-bg: var(--bs-primary);
+  --bs-nav-tabs-link-active-color: var(--bs-white);
+}
+
+#opponentsView-tab {
+  --bs-nav-tabs-link-active-bg: var(--bs-warning);
+  --bs-nav-tabs-link-active-color: var(--bs-dark);
+}
+
+.what-you-see {
+  @extend .bg-primary, .text-white;
+}
+
+.what-your-opponent-sees {
+  @extend .bg-warning, .text-dark;
+}
+
+#gameLog {
+  li {
+    @extend .mb-2, .pb-2, .border-bottom;
+  }
+}
+
+.game-log-my-move,
+.game-log-my-sees-result {
+  @extend .bg-primary, .text-white, .d-inline-block, .p-1;
+}
+
+.game-log-opponents-move,
+.game-log-opponent-sees-result {
+  @extend .bg-warning, .text-dark, .d-inline-block, .p-1;
+}
