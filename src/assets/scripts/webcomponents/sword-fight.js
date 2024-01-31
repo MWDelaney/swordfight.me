@@ -35,29 +35,26 @@ class SwordFight extends HTMLElement {
     let move = e.target;
     let myMove = move.getAttribute("data-id");
 
-    /**
-     * Random opponent move
-     */
-    let opponentsCharacter = require("../../../data/humanFighter.json");
-    let results = opponentsCharacter.results;
+            /**
+             * Random opponent move
+             */
+            let opponentsCharacter = require("../../../data/humanFighter.json");
+            let results = opponentsCharacter.results;
 
-    // Get the result id from the #sword-fight element
-    let lastResult = this.getAttribute("data-result");
+            // Get the result id from the #sword-fight element
+            let lastResult = this.getAttribute("data-result");
 
-    // Look up the results table for the current result
-    let result = results.find(result => result.id == lastResult);
+            // Look up the results table for the current result
+            let result = results.find(result => result.id == lastResult);
 
-    // Get the opponent's available moves
-    let moves = this.filterMoves(opponentsCharacter.moves, result);
+            // Get the opponent's available moves
+            let moves = this.filterMoves(opponentsCharacter.moves, result);
 
-    // Get a random move from the opponent's moves
-    let randomMove = moves[Math.floor(Math.random() * moves.length)];
+            // Get a random move from the opponent's moves
+            let randomMove = moves[Math.floor(Math.random() * moves.length)];
 
-    // Set the #opponentsMove input to the random move's id
-    document.getElementById("opponentsMove").value = randomMove.id;
-
-    // Get the opponent's move from the #opponentsMove input
-    let opponentMove = document.getElementById("opponentsMove").value;
+            // Set the opponent's move to the random move's id
+            let opponentMove = randomMove.id
 
     // Set up the game with the new moves
     this.setUpGame(myMove, opponentMove);
@@ -74,6 +71,8 @@ class SwordFight extends HTMLElement {
      */
     // Get the character data
     const character = require("../../../data/humanFighter.json");
+    // Get the opponent's character data
+    let opponentsCharacter = require("../../../data/humanFighter.json");
 
     // Get the outcome tables from the character data
     let outcomes = character.tables;
@@ -83,29 +82,27 @@ class SwordFight extends HTMLElement {
     let outcome = this.getOutcome(myMove, opponentMove, outcomes);
     let result = this.getResult(outcome, results);
 
-      // If debugging, log the results
-      console.log("Result: ", result);
-
-    // Set an attribute on the sword-fight element with the current result's ID for reference next round
-    this.setAttribute("data-result", result.id);
-
-
-    /**
-     * Set up opponent's character and results
-     */
-
-    // Get the opponent's character data
-    let opponentsCharacter = require("../../../data/humanFighter.json");
-
     // Get the opponent's outcome tables from the character data
     let opponentsOutcomes = opponentsCharacter.tables;
     let opponentsResults = opponentsCharacter.results;
 
-    let opponentsOutcome = this.getOutcome(opponentMove, myMove, outcomes);
+    // Get the opponent's result of this round
+    let opponentsOutcome = this.getOutcome(opponentMove, myMove, opponentsOutcomes);
     let opponentsResult = this.getResult(opponentsOutcome, opponentsResults);
 
-    // If debugging, log the results
-    console.log("Result: ", result);
+    // console.log("Result: ", result);
+    // console.log("Opponent's Result: ", opponentsResult);
+
+    // Set an attribute on the sword-fight element with the current result's ID for reference next round
+    this.setAttribute("data-result", result.id);
+
+    // Set an attribute on the sword-fight element with the opponent's result for the next round
+    this.setAttribute("data-opponent-result", result.id);
+
+    /**
+     * Log the last round
+     */
+    this.logRound(myMove, opponentMove, character, opponentsCharacter, result, opponentsResult);
 
 
     /**
@@ -122,7 +119,6 @@ class SwordFight extends HTMLElement {
      */
     let whatHappened = document.getElementById("whatHappened");
     whatHappened.innerHTML = opponentsResult.name;
-
 
 
 
@@ -187,6 +183,37 @@ class SwordFight extends HTMLElement {
     // Return the filtered moves
     return moves;
   }
+
+
+  /**
+   * logRound
+   * Log the current round
+   *
+   * @param {string} myMove - The move my character made
+   * @param {string} opponentMove - The move the opponent made
+   */
+  logRound = (myMove, opponentMove, character, opponentsCharacter, myResult, opponentResult) => {
+    // Get the name of the move my character made
+    let myMoveName = character.moves.find(move => move.id == myMove).tag + " " + character.moves.find(move => move.id == myMove).name;
+
+    // Get the name of the result of my move
+    let myResultName = myResult.name;
+
+    // Get the name of the move the opponent made
+    let opponentMoveName = opponentsCharacter.moves.find(move => move.id == opponentMove).tag + " " + opponentsCharacter.moves.find(move => move.id == opponentMove).name;
+
+    // Get the name of the result of the opponent's move
+    let opponentResultName = opponentResult.name;
+
+    // Create a list item in the log
+    let log = document.getElementById("gameLogList");
+    let li = document.createElement("li");
+    li.innerHTML = `<span class="game-log-my-move">` + myMoveName + `</span> vs <span class="game-log-opponents-move">` + opponentMoveName + `</span> <p>Resulting in: <span class="game-log-opponent-sees-result">` + myResultName + `</span> <span class="game-log-my-sees-result">` + opponentResultName + `</span></p>`;
+
+    // Append the LI to the log
+    log.appendChild(li);
+  }
+
 
 
   /**

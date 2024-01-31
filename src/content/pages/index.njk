@@ -4,20 +4,39 @@ title: Swordfight.me
 ---
 
 <sword-fight>
-  <article id="whatYouSee" class="what-you-see placeholder-glow">
-    <section class="what-you-see-content">
-      <h1>What you see</h1>
 
-      <h2 id="viewName"><span class="placeholder col-8"></span></h2>
-    </section>
-  </article>
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="yourView-tab" data-bs-toggle="tab" data-bs-target="#yourView" type="button" role="tab" aria-controls="yourView" aria-selected="true">What You See</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="opponentsView-tab" data-bs-toggle="tab" data-bs-target="#opponentsView" type="button" role="tab" aria-controls="opponentsView" aria-selected="false">What Your Opponent Sees</button>
+  </li>
+</ul>
 
-  <article id="yourStatus" class="your-status placeholder-glow">
-    <section class="your-status-content">
-      <h1>Your Status</h1>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane active" id="yourView" role="tabpanel" aria-labelledby="yourView-tab">
+      <article id="whatYouSee" class="what-you-see placeholder-glow">
+        <section class="what-you-see-content">
+          <h1>What you see</h1>
 
-      <h2 id="whatHappened"><span class="placeholder col-8"></span></h2>
-    </section>
+          <h2 id="viewName"><span class="placeholder col-8"></span></h2>
+        </section>
+      </article>
+    </div>
+
+    <div class="tab-pane" id="opponentsView" role="tabpanel" aria-labelledby="opponentsView-tab">
+      <article id="whatYourOpponentSees" class="what-your-opponent-sees placeholder-glow">
+        <section class="what-your-opponent-sees-content">
+          <h1>What your opponent sees</h1>
+
+          <h2 id="whatHappened"><span class="placeholder col-8"></span></h2>
+        </section>
+      </article>
+    </div>
+  </div>
 
   <aside id="characterSheet" class="character-sheet" data-character="human-fighter">
     <section id="charadterSheetProfile" class="character-sheet-profile">
@@ -28,9 +47,11 @@ title: Swordfight.me
     <ul id="characterSheetMovesList" class="character-sheet-moves-list">
     </ul>
   </aside>
-  <section id="fight">
-    <input id="opponentsMove" class="opponents-move" type="number" value="62" />
-    <button id="fightButton" class="fight-button" data-action="fight">Fight</button>
-  </section>
+
+  <aside id="gameLog" class="game-log">
+    <h1>Game Log</h1>
+    <ul id="gameLogList" class="game-log-list">
+    </ul>
+  </aside>
 </sword-fight>
 {% script "src/assets/scripts/webcomponents/sword-fight.js" | url %}
