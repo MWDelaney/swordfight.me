@@ -133,35 +133,55 @@ class SwordFight extends HTMLElement {
 
     // Get the character's moves and create buttons in #characterSheetMovesList with data-attributes for tag, range, type, and id
     let characterSheetMovesList = document.getElementById("characterSheetMovesList");
+
+    // Clear the characterSheetMovesList
     characterSheetMovesList.innerHTML = "";
+
+    // Arrange the moves in the list by tag, insert headers for each tag
+    let tags = [];
     myMoves.forEach(move => {
-      let button = document.createElement("button");
-      // If this move is available, add all the data-attributes
-      if(myFilteredMoves.find(filteredMove => filteredMove.id == move.id)) {
-        button.setAttribute("data-tag", move.tag);
-        button.setAttribute("data-range", move.range);
-        button.setAttribute("data-type", move.type);
-        button.setAttribute("data-id", move.id);
-        button.classList.add("button-move");
-
-      } else {
-        // If this move is not available, add a disabled attribute
-        button.setAttribute("disabled", "disabled");
+      if(!tags.includes(move.tag)) {
+        tags.push(move.tag);
       }
-
-      // Set the button's innerHTML to the move's tag and name
-      button.innerHTML = move.tag + " - " + move.name;
-
-      button.innerHTML += `<span class="badge badge-primary badge-pill">` + move.id + `</span>`;
-
-      // Wrap each button in an li
-      let li = document.createElement("li");
-      li.appendChild(button);
-
-      // Append the LI to the characterSheetMovesList
-      characterSheetMovesList.appendChild(li);
     });
 
+    // Create a header and a list for each tag
+    tags.forEach(tag => {
+      let h3 = document.createElement("h3");
+      h3.innerHTML = tag;
+      characterSheetMovesList.appendChild(h3);
+
+      let ul = document.createElement("ul");
+      characterSheetMovesList.appendChild(ul);
+
+      myMoves.forEach(move => {
+        if(move.tag == tag) {
+          let li = document.createElement("li");
+          let button = document.createElement("button");
+          // If this move is available, add all the data-attributes
+          if(myFilteredMoves.find(filteredMove => filteredMove.id == move.id)) {
+            button.setAttribute("data-tag", move.tag);
+            button.setAttribute("data-range", move.range);
+            button.setAttribute("data-type", move.type);
+            button.setAttribute("data-id", move.id);
+            button.classList.add("button-move");
+
+          } else {
+            // If this move is not available, add a disabled attribute
+            button.setAttribute("disabled", "disabled");
+          }
+
+          // Set the button's innerHTML to the move's tag and name
+          button.innerHTML = move.tag + " - " + move.name;
+          button.innerHTML += `<span class="badge bg-light badge-pill">` + move.id + `</span>`;
+          li.appendChild(button);
+          ul.appendChild(li);
+        }
+      });
+
+
+
+    });
   }
 
   /**
@@ -170,6 +190,13 @@ class SwordFight extends HTMLElement {
   filterMoves = (moves, result) => {
     // Filter the moves to only include the moves that are available to the character
     moves = moves.filter(move => {
+
+      // If the result's allowOnly array is not empty, filter out any moves that have tags that, when converted to lowercase, are not in the allowOnly array
+      if(result.allowOnly && result.allowOnly.length > 0) {
+        if(!result.allowOnly.includes(move.tag.toLowerCase())) {
+          return false;
+        }
+      }
 
       // If the move's range is not the same as the result's range, filter it out
       if(move.range != result.range) {
