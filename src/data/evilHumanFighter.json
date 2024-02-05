@@ -1,6 +1,6 @@
 {
-  "name": "Human Fighter",
-  "slug": "human-fighter",
+  "name": "Evil Human Fighter",
+  "slug": "evil-human-fighter",
   "description": "",
   "moves": [
     {
@@ -1159,7 +1159,6 @@
         "strong",
         "high",
         "low",
-        "defense",
         "risky"
       ]
     },
