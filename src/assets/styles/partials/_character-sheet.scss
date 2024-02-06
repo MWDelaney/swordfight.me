@@ -1,6 +1,18 @@
 .character-sheet {
   @extend .card;
 
+  h3 {
+    @extend .card-header, .h6;
+  }
+
+  ul {
+    @extend .list-group, .list-unstyled;
+  }
+
+  li {
+    @extend .list-group-item;
+  }
+
   &-profile {
     @extend .card-body;
   }
@@ -9,7 +21,7 @@
     @extend .list-unstyled;
 
     button {
-      @extend .btn, .btn-primary, .d-block, .m-2, .w-100;
+      @extend .btn, .btn-primary, .btn-sm, .d-block, .w-100;
     }
   }
 }

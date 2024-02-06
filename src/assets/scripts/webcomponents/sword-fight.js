@@ -77,6 +77,13 @@ class SwordFight extends HTMLElement {
     console.log("My Move: ", myMove);
     console.log("Opponent's Move: ", opponentMove);
 
+    // Insert the characters' names into the view
+    let opponentsNameHeading = document.getElementById("opponentsCharactersName");
+    opponentsNameHeading.innerHTML = this.opponentsCharacter.name;
+
+    let myNameHeading = document.getElementById("myCharactersName");
+    myNameHeading.innerHTML = this.myCharacter.name;
+
     /**
      * Set up your character and results
      *
@@ -112,14 +119,63 @@ class SwordFight extends HTMLElement {
     let viewName = document.getElementById("viewName");
     viewName.innerHTML = myResult.name;
 
-
     /**
-     * Set up what happened to you
+     * Do the recap of the previous round
      */
-    let whatHappened = document.getElementById("whatHappened");
-    whatHappened.innerHTML = opponentsResult.name;
+    // Get the recap element
+    let recap = document.getElementById("recapText");
+    let recapText = "";
 
+    // Write my recap
 
+    let myRecap = `You did a ` + this.myCharacter.moves.find(move => move.id == myMove).tag + ` ` + this.myCharacter.moves.find(move => move.id == myMove).name + ` and now you see your opponent ` + myResult.name + `.`;
+
+    // Stringify the result's restrict array with commas and an "or" if necessary
+    let myRestrictions = "";
+    myResult.restrict.forEach((restriction, index) => {
+      if(index == myResult.restrict.length - 1) {
+        myRestrictions += "or <strong>" + restriction + "</strong> ";
+      } else {
+        myRestrictions += "<strong>" + restriction + "</strong>, ";
+      }
+    });
+
+    // If the result's restrict array is not empty, add it to the recap
+    if(myResult.restrict.length > 0) {
+      myRecap += `<div class="card bg-primary text-white"><div class="card-body">You cannot do any ` + myRestrictions + ` this round</div></div>`;
+    }
+
+    // Write the opponent's recap
+    let opponentRecap = `Your opponent did a ` + this.opponentsCharacter.moves.find(move => move.id == opponentMove).tag + ` ` + this.opponentsCharacter.moves.find(move => move.id == opponentMove).name + ` they see you ` + opponentsResult.name + `.`;
+
+    // Stringify the result's restrict array with commas and an "or" if necessary
+    let opponentRestrictions = "";
+    opponentsResult.restrict.forEach((restriction, index) => {
+      if(index == opponentsResult.restrict.length - 1) {
+        opponentRestrictions += "or <strong>" + restriction + "</strong> ";
+      } else {
+        opponentRestrictions += "<strong>" + restriction + "</strong>, ";
+      }
+    });
+
+    // If the result's restrict array is not empty, add it to the recap
+    if(opponentsResult.restrict.length > 0) {
+      opponentRecap += `<div class="card bg-secondary text-white"><div class="card-body">Your opponent cannot do any ` + opponentRestrictions + ` this round</div></div>`;
+    }
+
+    recapText = `<div class="alert alert-primary">` + myRecap + `</div>`
+    recapText += `<div class="alert alert-secondary">` + opponentRecap + `</div>`;
+
+    // If my result has a score, add it to the recap
+    if(myResult.score) {
+      recapText += `<div class="alert alert-primary">Your score: ` + myResult.score + `</div>`;
+    }
+
+    // If the opponent's result has a score, add it to the recap
+    if(opponentsResult.score) {
+      recapText += `<div class="alert alert-secondary">Your opponent's score: ` + opponentsResult.score + `</div>`;
+    }
+    recap.innerHTML = recapText;
 
     /**
      * Set up the moves list
@@ -225,41 +281,41 @@ class SwordFight extends HTMLElement {
    * @param {string} myMove - The move my character made
    * @param {string} opponentMove - The move the opponent made
    */
-  logRound = (myMove, opponentMove, character, opponentsCharacter, myResult, opponentResult) => {
-    // Get the name of the move my character made
-    let myMoveName = character.moves.find(move => move.id == myMove).tag + " " + character.moves.find(move => move.id == myMove).name;
+  // logRound = (myMove, opponentMove, character, opponentsCharacter, myResult, opponentResult) => {
+  //   // Get the name of the move my character made
+  //   let myMoveName = character.moves.find(move => move.id == myMove).tag + " " + character.moves.find(move => move.id == myMove).name;
 
-    // Get the name of the result of my move
-    let myResultName = myResult.name;
+  //   // Get the name of the result of my move
+  //   let myResultName = myResult.name;
 
-    // Get the name of the move the opponent made
-    let opponentMoveName = opponentsCharacter.moves.find(move => move.id == opponentMove).tag + " " + opponentsCharacter.moves.find(move => move.id == opponentMove).name;
+  //   // Get the name of the move the opponent made
+  //   let opponentMoveName = opponentsCharacter.moves.find(move => move.id == opponentMove).tag + " " + opponentsCharacter.moves.find(move => move.id == opponentMove).name;
 
-    // Get the name of the result of the opponent's move
-    let opponentResultName = opponentResult.name;
+  //   // Get the name of the result of the opponent's moves
+  //   let opponentResultName = opponentResult.name;
 
-    // Concatenate myResult.restrict into <strong> tags
-    let myRestrictions = "";
-    myResult.restrict.forEach(restriction => {
-      myRestrictions += "<strong>" + restriction + "</strong> ";
-    });
+  //   // Concatenate myResult.restrict into <strong> tags
+  //   let myRestrictions = "";
+  //   myResult.restrict.forEach(restriction => {
+  //     myRestrictions += "<strong>" + restriction + "</strong> ";
+  //   });
 
-    // Concatenate opponentResult.restrict into <strong> tags
-    let opponentRestrictions = "";
-    opponentResult.restrict.forEach(restriction => {
-      opponentRestrictions += "<strong>" + restriction + "</strong> ";
-    });
+  //   // Concatenate opponentResult.restrict into <strong> tags
+  //   let opponentRestrictions = "";
+  //   opponentResult.restrict.forEach(restriction => {
+  //     opponentRestrictions += "<strong>" + restriction + "</strong> ";
+  //   });
 
-    // Create a list item in the log
-    let log = document.getElementById("gameLogList");
-    let li = document.createElement("li");
+  //   // Create a list item in the log
+  //   let log = document.getElementById("gameLogList");
+  //   let li = document.createElement("li");
 
-    li.innerHTML += `<div class="alert alert-primary">You did a ` + myMoveName + ` and your opponent was ` + myResultName + `<p>Your oponenent cannot do any ` + myRestrictions + `</div>`;
-    li.innerHTML += `<div class="alert alert-warning">Your opponent did a ` + opponentMoveName + ` and you were ` + opponentResultName + `<p>You cannot do any ` + opponentRestrictions + `</div>`;
+  //   li.innerHTML += `<div class="alert alert-primary">You did a ` + myMoveName + ` and your opponent was ` + myResultName + `<p>Your oponenent cannot do any ` + myRestrictions + `</div>`;
+  //   li.innerHTML += `<div class="alert alert-warning">Your opponent did a ` + opponentMoveName + ` and you were ` + opponentResultName + `<p>You cannot do any ` + opponentRestrictions + `</div>`;
 
-    // Append the LI to the log
-    log.appendChild(li);
-  }
+  //   // Append the LI to the log
+  //   log.appendChild(li);
+  // }
 
 
 
