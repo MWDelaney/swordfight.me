@@ -69,6 +69,9 @@ class SwordFight extends HTMLElement {
    */
   setUpGame = (myMove = "62", opponentMove = "62") => {
 
+    // Scroll to the top of the page
+    window.scrollTo(0, 0);
+
     // Log the characters
     console.log("My Character: ", this.myCharacter.name);
     console.log("Opponent's Character: ", this.opponentsCharacter.name);
