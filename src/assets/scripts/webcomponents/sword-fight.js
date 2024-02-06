@@ -142,7 +142,7 @@ class SwordFight extends HTMLElement {
 
     // If the result's restrict array is not empty, add it to the recap
     if(myResult.restrict.length > 0) {
-      myRecap += `<div class="card bg-primary text-white"><div class="card-body">You cannot do any ` + myRestrictions + ` this round</div></div>`;
+      myRecap += `<div class="card bg-secondary text-white"><div class="card-body">Your opponent cannot do any ` + myRestrictions + ` this round</div></div>`;
     }
 
     // Write the opponent's recap
@@ -160,7 +160,7 @@ class SwordFight extends HTMLElement {
 
     // If the result's restrict array is not empty, add it to the recap
     if(opponentsResult.restrict.length > 0) {
-      opponentRecap += `<div class="card bg-secondary text-white"><div class="card-body">Your opponent cannot do any ` + opponentRestrictions + ` this round</div></div>`;
+      opponentRecap += `<div class="card bg-primary text-white"><div class="card-body">You cannot do any ` + opponentRestrictions + ` this round</div></div>`;
     }
 
     recapText = `<div class="alert alert-primary">` + myRecap + `</div>`
@@ -214,8 +214,9 @@ class SwordFight extends HTMLElement {
         if(move.tag == tag) {
           let li = document.createElement("li");
           let button = document.createElement("button");
-          // If this move is available, add all the data-attributes
-          if(myFilteredMoves.find(filteredMove => filteredMove.id == move.id)) {
+
+          // If this move is in the array of filtered moves, add a data-attribute for tag, range, type, and id
+          if(myFilteredMoves.includes(move)) {
             button.setAttribute("data-tag", move.tag);
             button.setAttribute("data-range", move.range);
             button.setAttribute("data-type", move.type);
@@ -248,8 +249,8 @@ class SwordFight extends HTMLElement {
     moves = moves.filter(move => {
 
       // If the result's allowOnly array is not empty, filter out any moves that have tags that, when converted to lowercase, are not in the allowOnly array
-      if(result.allowOnly && result.allowOnly.length > 0) {
-        if(!result.allowOnly.includes(move.tag.toLowerCase())) {
+      if(result.allowOnly) {
+        if(!result.allowOnly.includes(move.tag)) {
           return false;
         }
       }
@@ -259,10 +260,13 @@ class SwordFight extends HTMLElement {
         return false;
       }
 
-      // Log the array of restricted move types
-
       // If the move's type is in the result's restrict array, filter it out
       if(result.restrict.includes(move.type)) {
+        return false;
+      }
+
+      // If the move's tag is in the result's restrict array, filter it out
+      if(result.restrict.includes(move.tag)) {
         return false;
       }
 

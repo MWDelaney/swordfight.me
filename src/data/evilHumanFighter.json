@@ -1134,7 +1134,7 @@
       "range": "close",
       "score": "",
       "restrict": [
-        "thrust",
+        "Thrust",
         "high"
       ]
     },
@@ -1145,7 +1145,7 @@
       "range": "close",
       "score": "",
       "restrict": [
-        "thrust",
+        "Thrust",
         "low"
       ]
     },
