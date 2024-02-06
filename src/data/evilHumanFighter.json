@@ -2,6 +2,7 @@
   "name": "Evil Human Fighter",
   "slug": "evil-human-fighter",
   "description": "",
+  "health": "12",
   "moves": [
     {
       "tag": "Down Swing",

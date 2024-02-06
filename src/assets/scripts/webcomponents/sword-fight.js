@@ -9,6 +9,12 @@ class SwordFight extends HTMLElement {
 
     // Load the opponent's character
     this.opponentsCharacter = require("../../../data/evilHumanFighter.json");
+
+    // Set my character's health from the data
+    this.myHealth = this.myCharacter.health;
+
+    // Set the opponent's character's health from the data
+    this.opponentsHealth = this.opponentsCharacter.health;
   }
 
   connectedCallback() {
@@ -87,12 +93,12 @@ class SwordFight extends HTMLElement {
     let myNameHeading = document.getElementById("myCharactersName");
     myNameHeading.innerHTML = this.myCharacter.name;
 
+
     /**
      * Set up your character and results
      *
      * In this game, your moves are come from your character's data, and your outcomes and results come from your opponent's character's data.
      */
-
 
     // Get the results of this round
     let myOutcome = this.getOutcome(myMove, opponentMove, this.opponentsCharacter.tables);
@@ -109,6 +115,20 @@ class SwordFight extends HTMLElement {
     this.setAttribute("data-opponent-result", myResult.id);
 
     /**
+     * Update the characters' health
+     */
+    // If the opponent's score is greater than 0, subtract the opponent's result's score from my character's health
+    if(opponentsResult.score > 0) {
+      this.myHealth -= myResult.score;
+    }
+
+    // If my score is greater than 0, subtract my result's score from the opponent's character's health
+    if(myResult.score > 0) {
+      this.opponentsHealth -= opponentsResult.score;
+    }
+
+
+    /**
      * Log the last round
      */
     //this.logRound(myMove, opponentMove, this.myCharacter.tables, this.opponentsCharacter.tables, myResult, opponentsResult);
@@ -117,6 +137,14 @@ class SwordFight extends HTMLElement {
     /**
      * Set up the view
      */
+
+    // Insert the characters' health into the view
+    let myHealthElement = document.getElementById("myCharactersHealth");
+    myHealthElement.innerHTML = this.myHealth;
+
+    let opponentsHealthElement = document.getElementById("opponentsCharactersHealth");
+    opponentsHealthElement.innerHTML = this.opponentsHealth;
+
 
     // Populate #theLastOutcome with the name of the outcome
     let viewName = document.getElementById("viewName");
@@ -233,7 +261,7 @@ class SwordFight extends HTMLElement {
 
           // Set the button's innerHTML to the move's tag and name
           button.innerHTML = move.tag + " - " + move.name;
-          button.innerHTML += `<span class="badge bg-light badge-pill">` + move.id + `</span>`;
+          button.innerHTML += ` <span class="badge bg-light badge-pill">` + move.mod + `</span>`;
           li.appendChild(button);
           ul.appendChild(li);
         }
