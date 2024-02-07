@@ -119,12 +119,16 @@ class SwordFight extends HTMLElement {
      */
     // If the opponent's score is greater than 0, subtract the opponent's result's score from my character's health
     if(opponentsResult.score > 0) {
-      this.myHealth -= myResult.score;
+      console.log("Hit: ", opponentsResult.score);
+      this.myHealth -= opponentsResult.score;
+      console.log("My Health: ", (this.myHealth));
     }
 
     // If my score is greater than 0, subtract my result's score from the opponent's character's health
     if(myResult.score > 0) {
-      this.opponentsHealth -= opponentsResult.score;
+      console.log("Hit: ", myResult.score);
+      this.opponentsHealth -= myResult.score;
+      console.log("Opponent's Health: ", (this.opponentsHealth));
     }
 
 
@@ -150,6 +154,14 @@ class SwordFight extends HTMLElement {
     let viewName = document.getElementById("viewName");
     viewName.innerHTML = myResult.name;
 
+    // Update my health
+    let myHealth = document.getElementById("myCharactersHealth");
+    myHealth.innerHTML = this.myHealth;
+
+    // Update the opponent's health
+    let opponentsHealth = document.getElementById("opponentsCharactersHealth");
+    opponentsHealth.innerHTML = this.opponentsHealth;
+
     /**
      * Do the recap of the previous round
      */
@@ -158,7 +170,6 @@ class SwordFight extends HTMLElement {
     let recapText = "";
 
     // Write my recap
-
     let myRecap = `You did a ` + this.myCharacter.moves.find(move => move.id == myMove).tag + ` ` + this.myCharacter.moves.find(move => move.id == myMove).name + ` and now you see your opponent ` + myResult.name + `.`;
 
     // Stringify the result's restrict array with commas and an "or" if necessary
