@@ -5,24 +5,42 @@ title: Swordfight.me
 
 <sword-fight>
 
+  {#
+    #recap
+
+    The recap section will display a summary of the player's actions and the opponent's actions, and the results
+    of those actions.
+  #}
+  <aside id="recap" class="recap">
+    <h2>Recap</h2>
+    <ul id="recapList">
+    </ul>
+  </aside>
+
+
 <div class="row">
   <div class="col-7">
 
-    <article id="whatYouSee" class="what-you-see placeholder-glow">
-      <section class="what-you-see-content">
-        <div id="yourOpponent">
-          <h2>Your Opponent</h2>
-          <p id="opponentsCharactersName"><span class="placeholder col-8"></span></p>
-          <h3>Health:</h3>
-          <p id="opponentsCharactersHealth"><span class="placeholder col-8"></span></p>
-        </div>
-        <aside id="recap" class="recap">
-          <h2>Recap</h2>
-          <p id="recapText"><span class="placeholder col-8"></span></p>
-        </aside>
+    {#
+      #yourOpponent
 
+      The main section of the game where the player will see their opponent's name, health,
+      and a first-person perspective of their opponent.
+    #}
+    <article id="yourOpponent">
+      <section>
+
+          {# Your oppponent's name #}
+          <h2>Your Opponent</h2>
+          <p id="opponentsName"><span class="placeholder col-8"></span></p>
+
+          {# Your oppponent's health #}
+          <h3>Health:</h3>
+          <p id="opponentsHealth"><span class="placeholder col-8"></span></p>
+
+        {# Your first-person perspectve view of your opponent #}
         <h2>You see your opponent:</h2>
-        <div class="alert alert-secondary" id="viewName">
+        <div class="alert alert-secondary" id="myView">
           <span class="placeholder col-8"></span>
         </div>
 
@@ -32,25 +50,32 @@ title: Swordfight.me
   </div>
   <div class="col-5">
 
-  <aside id="characterSheet" class="character-sheet" data-character="human-fighter">
-    <section id="characterSheetProfile" class="character-sheet-profile">
-      <h1>Character Sheet</h1>
-      <h2 id="myCharactersName"><span class="placeholder col-8"></span></h2>
+  {#
+    #yourSelf
+
+    The character sheet will display the player's name, health, and a list of moves that the player can use.
+  #}
+  <aside id="mySelf" class="character-sheet">
+    <section>
+
+      {# Your name #}
+      <h2>You</h2>
+      <p id="myName"><span class="placeholder col-8"></span></p>
+
+      {# Your health #}
       <h3>Health:</h3>
-      <p id="myCharactersHealth"><span class="placeholder col-8"></span></p>
+      <p id="myHealth"><span class="placeholder col-8"></span></p>
     </section>
 
-    <ul id="characterSheetMovesList" class="character-sheet-moves-list">
+    {# Your list of moves #}
+    <ul id="myMoves">
     </ul>
-  </aside>
 
-  {# <aside id="gameLog" class="game-log">
-    <h1>Game Log</h1>
-    <ul id="gameLogList" class="game-log-list">
-    </ul>
-  </aside> #}
+  </aside>
 
     </div>
   </div>
+
+
 </sword-fight>
 {% script "src/assets/scripts/webcomponents/sword-fight.js" | url %}

@@ -36,9 +36,10 @@ class SwordFight extends HTMLElement {
    */
   addEventListeners = () => {
     // Add event listeners for the characterSheetMovesList buttons
-    let characterSheetMovesList = document.getElementById("characterSheetMovesList");
+    let characterSheetMovesList = document.getElementById("myMoves");
     characterSheetMovesList.addEventListener("click", this.handleMoveClick);
   }
+
 
   /**
    * handleMoveClick
@@ -62,18 +63,22 @@ class SwordFight extends HTMLElement {
               let moves = this.filterMoves(this.opponentsCharacter.moves, result);
 
               // Get a random move from the opponent's moves
-              let opponentMove = moves[Math.floor(Math.random() * moves.length)].id;
+              let opponentsMove = moves[Math.floor(Math.random() * moves.length)].id;
 
       // Set up the game with the new moves
-      this.setUpGame(myMove, opponentMove);
+      this.setUpGame(myMove, opponentsMove);
     }
   }
+
 
   /**
    * setUpGame
    *
+   * @param {string} myMove - The move my character made (default: "62" "jumping back")
+   * @param {string} opponentsMove - The move the opponent made (default: "62" "jumping back")
+   * @returns {void}
    */
-  setUpGame = (myMove = "62", opponentMove = "62") => {
+  setUpGame = (myMove = "62", opponentsMove = "62") => {
 
     // Scroll to the top of the page
     window.scrollTo(0, 0);
@@ -84,28 +89,29 @@ class SwordFight extends HTMLElement {
 
     // Log the moves
     console.log("My Move: ", myMove);
-    console.log("Opponent's Move: ", opponentMove);
+    console.log("Opponent's Move: ", opponentsMove);
 
     // Insert the characters' names into the view
-    let opponentsNameHeading = document.getElementById("opponentsCharactersName");
+    let opponentsNameHeading = document.getElementById("opponentsName");
     opponentsNameHeading.innerHTML = this.opponentsCharacter.name;
 
-    let myNameHeading = document.getElementById("myCharactersName");
+    let myNameHeading = document.getElementById("myName");
     myNameHeading.innerHTML = this.myCharacter.name;
 
 
     /**
-     * Set up your character and results
+     * Set up my character and results
      *
-     * In this game, your moves are come from your character's data, and your outcomes and results come from your opponent's character's data.
+     * In this game, my moves are come from my character's data, and my
+     * outcomes and results come from my opponent's character's data.
      */
 
-    // Get the results of this round
-    let myOutcome = this.getOutcome(myMove, opponentMove, this.opponentsCharacter.tables);
+    // Get my results of this round
+    let myOutcome = this.getOutcome(myMove, opponentsMove, this.opponentsCharacter.tables);
     let myResult = this.getResult(myOutcome, this.opponentsCharacter.results);
 
     // Get the opponent's result of this round
-    let opponentsOutcome = this.getOutcome(opponentMove, myMove, this.myCharacter.tables);
+    let opponentsOutcome = this.getOutcome(opponentsMove, myMove, this.myCharacter.tables);
     let opponentsResult = this.getResult(opponentsOutcome, this.myCharacter.results);
 
     // Set an attribute on the sword-fight element with the current result's ID for reference next round
@@ -113,6 +119,7 @@ class SwordFight extends HTMLElement {
 
     // Set an attribute on the sword-fight element with the opponent's result for the next round
     this.setAttribute("data-opponent-result", myResult.id);
+
 
     /**
      * Update the characters' health
@@ -133,40 +140,31 @@ class SwordFight extends HTMLElement {
 
 
     /**
-     * Log the last round
-     */
-    //this.logRound(myMove, opponentMove, this.myCharacter.tables, this.opponentsCharacter.tables, myResult, opponentsResult);
-
-
-    /**
      * Set up the view
+     *
+     * Now that the math is done, we can update the view with the new data
      */
 
     // Insert the characters' health into the view
-    let myHealthElement = document.getElementById("myCharactersHealth");
+    let myHealthElement = document.getElementById("myHealth");
     myHealthElement.innerHTML = this.myHealth;
 
-    let opponentsHealthElement = document.getElementById("opponentsCharactersHealth");
+    let opponentsHealthElement = document.getElementById("opponentsHealth");
     opponentsHealthElement.innerHTML = this.opponentsHealth;
 
 
     // Populate #theLastOutcome with the name of the outcome
-    let viewName = document.getElementById("viewName");
-    viewName.innerHTML = myResult.name;
+    let myView = document.getElementById("myView");
+    myView.innerHTML = myResult.name;
 
-    // Update my health
-    let myHealth = document.getElementById("myCharactersHealth");
-    myHealth.innerHTML = this.myHealth;
-
-    // Update the opponent's health
-    let opponentsHealth = document.getElementById("opponentsCharactersHealth");
-    opponentsHealth.innerHTML = this.opponentsHealth;
 
     /**
-     * Do the recap of the previous round
+     * Recap the previous round
+     *
+     * Show the moves and results from the previous round
      */
     // Get the recap element
-    let recap = document.getElementById("recapText");
+    let recap = document.getElementById("recapList");
     let recapText = "";
 
     // Write my recap
@@ -184,11 +182,11 @@ class SwordFight extends HTMLElement {
 
     // If the result's restrict array is not empty, add it to the recap
     if(myResult.restrict.length > 0) {
-      myRecap += `<div class="card bg-secondary text-white"><div class="card-body">Your opponent cannot do any ` + myRestrictions + ` this round</div></div>`;
+      myRecap += `<div class="card bg-stext-econdary"><div class="card-body">Your opponent cannot do any ` + myRestrictions + ` this round</div></div>`;
     }
 
     // Write the opponent's recap
-    let opponentRecap = `Your opponent did a ` + this.opponentsCharacter.moves.find(move => move.id == opponentMove).tag + ` ` + this.opponentsCharacter.moves.find(move => move.id == opponentMove).name + ` they see you ` + opponentsResult.name + `.`;
+    let opponentRecap = `Your opponent did a ` + this.opponentsCharacter.moves.find(move => move.id == opponentsMove).tag + ` ` + this.opponentsCharacter.moves.find(move => move.id == opponentsMove).name + ` they see you ` + opponentsResult.name + `.`;
 
     // Stringify the result's restrict array with commas and an "or" if necessary
     let opponentRestrictions = "";
@@ -219,21 +217,25 @@ class SwordFight extends HTMLElement {
     }
     recap.innerHTML = recapText;
 
+
     /**
      * Set up the moves list
+     *
+     * Get all the move my character can do, then filter them with the restrictions from the last round
+     *
+     * Then, create buttons for each move in the list.
      */
-
     // Get all my character's moves
     let myMoves = this.myCharacter.moves;
 
     // Get the moves filtered by the result of the last round
     let myFilteredMoves = this.filterMoves(this.myCharacter.moves, opponentsResult);
 
-    // Get the character's moves and create buttons in #characterSheetMovesList with data-attributes for tag, range, type, and id
-    let characterSheetMovesList = document.getElementById("characterSheetMovesList");
+    // Get the character's moves and create buttons in #myMoves with data-attributes for tag, range, type, and id
+    let myMovesList = document.getElementById("myMoves");
 
-    // Clear the characterSheetMovesList
-    characterSheetMovesList.innerHTML = "";
+    // Clear the myMovesList
+    myMovesList.innerHTML = "";
 
     // Arrange the moves in the list by tag, insert headers for each tag
     let tags = [];
@@ -245,17 +247,22 @@ class SwordFight extends HTMLElement {
 
     // Create a header and a list for each tag
     tags.forEach(tag => {
+      let container = document.createElement("div");
+      container.classList.add("moves-tag");
+
       let h3 = document.createElement("h3");
       h3.innerHTML = tag;
-      characterSheetMovesList.appendChild(h3);
+      container.appendChild(h3);
 
       let ul = document.createElement("ul");
-      characterSheetMovesList.appendChild(ul);
+      container.appendChild(ul);
+      myMovesList.appendChild(container);
 
       myMoves.forEach(move => {
         if(move.tag == tag) {
           let li = document.createElement("li");
           let button = document.createElement("button");
+          button.classList.add("button-move");
 
           // If this move is in the array of filtered moves, add a data-attribute for tag, range, type, and id
           if(myFilteredMoves.includes(move)) {
@@ -263,23 +270,28 @@ class SwordFight extends HTMLElement {
             button.setAttribute("data-range", move.range);
             button.setAttribute("data-type", move.type);
             button.setAttribute("data-id", move.id);
-            button.classList.add("button-move");
 
           } else {
             // If this move is not available, add a disabled attribute
             button.setAttribute("disabled", "disabled");
           }
 
+          let modClass = "";
+
+          // Test whether the move's "mod" value is positive or negative
+          if(move.mod > 0) {
+            modClass = "positive";
+          } else {
+            modClass = "negative";
+          }
+
           // Set the button's innerHTML to the move's tag and name
-          button.innerHTML = move.tag + " - " + move.name;
-          button.innerHTML += ` <span class="badge bg-light badge-pill">` + move.mod + `</span>`;
+          button.innerHTML = `<span class="move-tag">` + move.tag + `</span> ` + move.name;
+          button.innerHTML += ` <span class="move-mod ` + modClass + `">` + move.mod + `</span>`;
           li.appendChild(button);
           ul.appendChild(li);
         }
       });
-
-
-
     });
   }
 
@@ -325,9 +337,9 @@ class SwordFight extends HTMLElement {
    * Log the current round
    *
    * @param {string} myMove - The move my character made
-   * @param {string} opponentMove - The move the opponent made
+   * @param {string} opponentsMove - The move the opponent made
    */
-  // logRound = (myMove, opponentMove, character, opponentsCharacter, myResult, opponentResult) => {
+  // logRound = (myMove, opponentsMove, character, opponentsCharacter, myResult, opponentResult) => {
   //   // Get the name of the move my character made
   //   let myMoveName = character.moves.find(move => move.id == myMove).tag + " " + character.moves.find(move => move.id == myMove).name;
 
@@ -335,7 +347,7 @@ class SwordFight extends HTMLElement {
   //   let myResultName = myResult.name;
 
   //   // Get the name of the move the opponent made
-  //   let opponentMoveName = opponentsCharacter.moves.find(move => move.id == opponentMove).tag + " " + opponentsCharacter.moves.find(move => move.id == opponentMove).name;
+  //   let opponentsMoveName = opponentsCharacter.moves.find(move => move.id == opponentsMove).tag + " " + opponentsCharacter.moves.find(move => move.id == opponentsMove).name;
 
   //   // Get the name of the result of the opponent's moves
   //   let opponentResultName = opponentResult.name;
@@ -357,7 +369,7 @@ class SwordFight extends HTMLElement {
   //   let li = document.createElement("li");
 
   //   li.innerHTML += `<div class="alert alert-primary">You did a ` + myMoveName + ` and your opponent was ` + myResultName + `<p>Your oponenent cannot do any ` + myRestrictions + `</div>`;
-  //   li.innerHTML += `<div class="alert alert-warning">Your opponent did a ` + opponentMoveName + ` and you were ` + opponentResultName + `<p>You cannot do any ` + opponentRestrictions + `</div>`;
+  //   li.innerHTML += `<div class="alert alert-warning">Your opponent did a ` + opponentsMoveName + ` and you were ` + opponentResultName + `<p>You cannot do any ` + opponentRestrictions + `</div>`;
 
   //   // Append the LI to the log
   //   log.appendChild(li);
@@ -369,7 +381,7 @@ class SwordFight extends HTMLElement {
    * getOutcome
    * Get the outcome of the current pair of moves
    * @param {string} myMove - The move my character made
-   * @param {string} opponentMove - The move the opponent made
+   * @param {string} opponentsMove - The move the opponent made
    * @param {object} table - The outcome tables for my move
    * @returns {string} - The outcome of the current round
    */

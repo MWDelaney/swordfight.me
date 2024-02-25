@@ -1,0 +1,39 @@
+#myMoves {
+  @extend .list-unstyled;
+}
+
+.moves-tag {
+  @extend .d-none;
+
+  &:has(button:enabled) {
+    @extend .d-block;
+  }
+
+  ul {
+    @extend .list-unstyled;
+
+    li {
+      @extend .mb-2;
+    }
+  }
+}
+
+.button-move {
+  @extend .btn, .btn-primary, .d-block, .w-100;
+}
+
+.move-mod {
+  @extend .badge;
+
+  &.positive {
+    @extend .bg-success;
+  }
+
+  &.negative {
+    @extend .bg-danger;
+  }
+}
+
+#myView {
+  min-height: 600px;
+}
