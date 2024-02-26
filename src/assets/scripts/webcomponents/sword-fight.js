@@ -182,13 +182,16 @@ class SwordFight extends HTMLElement {
     // Write my recap
     let myRecap = `You did a ` + this.myCharacter.moves.find(move => move.id == myMove).tag + ` ` + this.myCharacter.moves.find(move => move.id == myMove).name + ` and now you see your opponent ` + myResult.name + `.`;
 
-    // Stringify the result's restrict array with commas and an "or" if necessary
+    // Stringify the result's restrict array with commas
     let myRestrictions = "";
     myResult.restrict.forEach((restriction, index) => {
-      if(index == myResult.restrict.length - 1) {
+      if(myResult.restrict.length > 1 && index == myResult.restrict.length - 1) {
+        // Make a strong element for the last item in the array
         myRestrictions += "or <strong>" + restriction + "</strong> ";
-      } else {
+      } else if(myResult.restrict.length > 1) {
         myRestrictions += "<strong>" + restriction + "</strong>, ";
+      } else {
+        myRestrictions += "<strong>" + restriction + "</strong> ";
       }
     });
 
@@ -203,10 +206,14 @@ class SwordFight extends HTMLElement {
     // Stringify the result's restrict array with commas and an "or" if necessary
     let opponentRestrictions = "";
     opponentsResult.restrict.forEach((restriction, index) => {
-      if(index == opponentsResult.restrict.length - 1) {
+      if(opponentsResult.restrict.length > 1 && index == opponentsResult.restrict.length - 1) {
+        // Make a strong element for the last item in the array
         opponentRestrictions += "or <strong>" + restriction + "</strong> ";
-      } else {
+      } else if(opponentsResult.restrict.length > 1) {
         opponentRestrictions += "<strong>" + restriction + "</strong>, ";
+      }
+      else {
+        opponentRestrictions += "<strong>" + restriction + "</strong> ";
       }
     });
 
