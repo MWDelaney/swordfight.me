@@ -169,6 +169,10 @@ class SwordFight extends HTMLElement {
     let myView = this.shadowRoot.getElementById("myView");
     myView.innerHTML = myResult.name;
 
+    // Populate the range
+    let theRange = this.shadowRoot.getElementById("theRange");
+    theRange.innerHTML = myResult.range;
+
 
     /**
      * Recap the previous round

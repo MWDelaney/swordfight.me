@@ -1,3 +1,61 @@
 #recapList {
   @extend .list-unstyled;
 }
+
+.profiles {
+  @extend .row, .row-cols-2, .g-4;
+}
+
+#myProfile,
+#opponentsProfile {
+  @extend .text-center, .p-2, .col;
+
+  h2,
+  h3,
+  p {
+    @extend .d-inline, .me-2;
+
+    &:last-child {
+      @extend .me-0;
+    }
+  }
+
+  h2,
+  h2 + p {
+    @extend .fs-4;
+  }
+
+  h3,
+  h3 + p {
+    @extend .fs-5;
+  }
+
+  .card-body {
+    @extend .d-flex, .justify-content-between;
+  }
+
+}
+
+#myProfile {
+  @extend .text-white;
+
+  right: auto;
+
+  .card {
+    @extend .bg-primary, .text-white;
+  }
+}
+
+#opponentsProfile {
+  @extend .text-white;
+
+  left: auto;
+
+  .card {
+    @extend .bg-secondary, .text-white;
+  }
+}
+
+#gameWrapper {
+  position: relative;
+}

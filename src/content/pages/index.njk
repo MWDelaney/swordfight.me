@@ -5,6 +5,50 @@ title: Swordfight.me
 
 <sword-fight>
   <template id="swordFightTemplate">
+    <div id="gameWrapper">
+
+      <div class="profiles">
+
+        <section id="myProfile">
+          <div class="card">
+            <div class="card-body">
+
+              {# Your name #}
+              <div>
+                <h2>You:</h2>
+                <p id="myName"><span class="placeholder col-8"></span></p>
+              </div>
+
+              <div>
+                {# Your health #}
+                <h3>Health:</h3>
+                <p id="myHealth"><span class="placeholder col-8"></span></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="opponentsProfile">
+          <div class="card">
+            <div class="card-body">
+
+            <div>
+              {# Your oppponent's name #}
+              <h2>Opponent:</h2>
+              <p id="opponentsName"><span class="placeholder col-8"></span></p>
+            </div>
+
+            <div>
+              {# Your oppponent's health #}
+              <h3>Health:</h3>
+              <p id="opponentsHealth"><span class="placeholder col-8"></span></p>
+            </div>
+
+            </div>
+          </div>
+        </section>
+
+      </div>
 
     {#
       #recap
@@ -18,9 +62,16 @@ title: Swordfight.me
       </ul>
     </aside>
 
+    {#
+      #currentRage
 
-    <div class="row">
-      <div class="col-7">
+      The current range will display the distance between the player and their opponent.
+    #}
+    <div id="currentRage">
+      <h3>Range:</h3>
+      <p id="theRange"><span class="placeholder col-8"></span></p>
+    </div>
+
 
         {#
           #yourOpponent
@@ -29,28 +80,14 @@ title: Swordfight.me
           and a first-person perspective of their opponent.
         #}
         <article id="yourOpponent">
-          <section>
-
-              {# Your oppponent's name #}
-              <h2>Your Opponent</h2>
-              <p id="opponentsName"><span class="placeholder col-8"></span></p>
-
-              {# Your oppponent's health #}
-              <h3>Health:</h3>
-              <p id="opponentsHealth"><span class="placeholder col-8"></span></p>
-
             {# Your first-person perspectve view of your opponent #}
             <h2>You see your opponent:</h2>
             <div class="alert alert-secondary" id="myView">
-              <div id="currentRange"></div>
               <span class="placeholder col-8"></span>
             </div>
 
-          </section>
         </article>
 
-      </div>
-      <div class="col-5">
 
       {#
         #yourSelf
@@ -58,28 +95,12 @@ title: Swordfight.me
         The character sheet will display the player's name, health, and a list of moves that the player can use.
       #}
       <article id="mySelf" class="character-sheet">
-        <section>
-
-          {# Your name #}
-          <h2>You</h2>
-          <p id="myName"><span class="placeholder col-8"></span></p>
-
-          {# Your health #}
-          <h3>Health:</h3>
-          <p id="myHealth"><span class="placeholder col-8"></span></p>
-
-          {# Your list of moves #}
-        </section>
-
         {# Your list of moves #}
         <ul id="myMoves">
         </ul>
 
       </article>
-
-      </div>
     </div>
-
   </template>
 </sword-fight>
 {% script "src/assets/scripts/webcomponents/sword-fight.js" | url %}
