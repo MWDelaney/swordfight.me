@@ -17,7 +17,28 @@ class SwordFight extends HTMLElement {
     this.opponentsHealth = this.opponentsCharacter.health;
   }
 
-  connectedCallback() {
+  async connectedCallback() {
+
+    // Create a shadow root
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+
+    // Add the template to the shadow root
+    const template = this.querySelector('#swordFightTemplate');
+    const clone = document.importNode(template.content, true);
+    shadowRoot.appendChild(clone);
+
+    // Fetch the styles
+    const response = await fetch('/assets/styles/styles.css');
+    const styles = await response.text();
+
+    // Create a style element
+    const styleElement = document.createElement('style');
+    styleElement.textContent = styles;
+
+    // Append the style element to the shadow root
+    this.shadowRoot.appendChild(styleElement);
+
+    // Initialize the game
     this.init();
   }
 
@@ -36,7 +57,7 @@ class SwordFight extends HTMLElement {
    */
   addEventListeners = () => {
     // Add event listeners for the characterSheetMovesList buttons
-    let characterSheetMovesList = document.getElementById("myMoves");
+    let characterSheetMovesList = this.shadowRoot.getElementById("myMoves");
     characterSheetMovesList.addEventListener("click", this.handleMoveClick);
   }
 
@@ -45,25 +66,12 @@ class SwordFight extends HTMLElement {
    * handleMoveClick
    */
   handleMoveClick = (e) => {
-    if(e.target.classList.contains("button-move")) {
+    if (e.target.classList.contains("button-move") || e.target.parentElement.classList.contains("button-move")) {
       let move = e.target;
       let myMove = move.getAttribute("data-id");
 
-              /**
-               * Random opponent move
-               */
-
-              // Get my character's result from the previous round, since that's what will restrict the opponent's moves
-              let lastResult = this.getAttribute("data-result");
-
-              // Look up the results table for the current result
-              let result = this.opponentsCharacter.results.find(result => result.id == lastResult);
-
-              // Get the opponent's available moves
-              let moves = this.filterMoves(this.opponentsCharacter.moves, result);
-
-              // Get a random move from the opponent's moves
-              let opponentsMove = moves[Math.floor(Math.random() * moves.length)].id;
+      // Get the opponent's move
+      let opponentsMove = this.randomOpponentsMove(this.getAttribute("data-result"))
 
       // Set up the game with the new moves
       this.setUpGame(myMove, opponentsMove);
@@ -92,10 +100,10 @@ class SwordFight extends HTMLElement {
     console.log("Opponent's Move: ", opponentsMove);
 
     // Insert the characters' names into the view
-    let opponentsNameHeading = document.getElementById("opponentsName");
+    let opponentsNameHeading = this.shadowRoot.getElementById("opponentsName");
     opponentsNameHeading.innerHTML = this.opponentsCharacter.name;
 
-    let myNameHeading = document.getElementById("myName");
+    let myNameHeading = this.shadowRoot.getElementById("myName");
     myNameHeading.innerHTML = this.myCharacter.name;
 
 
@@ -109,10 +117,14 @@ class SwordFight extends HTMLElement {
     // Get my results of this round
     let myOutcome = this.getOutcome(myMove, opponentsMove, this.opponentsCharacter.tables);
     let myResult = this.getResult(myOutcome, this.opponentsCharacter.results);
+    // If there's a modifier, get it and its value
+    let myModifier = myResult.mod;
 
     // Get the opponent's result of this round
     let opponentsOutcome = this.getOutcome(opponentsMove, myMove, this.myCharacter.tables);
     let opponentsResult = this.getResult(opponentsOutcome, this.myCharacter.results);
+    // If there's a modifier, get it and its value
+    let opponentsModifier = opponentsResult.mod;
 
     // Set an attribute on the sword-fight element with the current result's ID for reference next round
     this.setAttribute("data-result", myResult.id);
@@ -146,15 +158,15 @@ class SwordFight extends HTMLElement {
      */
 
     // Insert the characters' health into the view
-    let myHealthElement = document.getElementById("myHealth");
+    let myHealthElement = this.shadowRoot.getElementById("myHealth");
     myHealthElement.innerHTML = this.myHealth;
 
-    let opponentsHealthElement = document.getElementById("opponentsHealth");
+    let opponentsHealthElement = this.shadowRoot.getElementById("opponentsHealth");
     opponentsHealthElement.innerHTML = this.opponentsHealth;
 
 
     // Populate #theLastOutcome with the name of the outcome
-    let myView = document.getElementById("myView");
+    let myView = this.shadowRoot.getElementById("myView");
     myView.innerHTML = myResult.name;
 
 
@@ -164,7 +176,7 @@ class SwordFight extends HTMLElement {
      * Show the moves and results from the previous round
      */
     // Get the recap element
-    let recap = document.getElementById("recapList");
+    let recap = this.shadowRoot.getElementById("recapList");
     let recapText = "";
 
     // Write my recap
@@ -218,6 +230,7 @@ class SwordFight extends HTMLElement {
     recap.innerHTML = recapText;
 
 
+
     /**
      * Set up the moves list
      *
@@ -232,7 +245,7 @@ class SwordFight extends HTMLElement {
     let myFilteredMoves = this.filterMoves(this.myCharacter.moves, opponentsResult);
 
     // Get the character's moves and create buttons in #myMoves with data-attributes for tag, range, type, and id
-    let myMovesList = document.getElementById("myMoves");
+    let myMovesList = this.shadowRoot.getElementById("myMoves");
 
     // Clear the myMovesList
     myMovesList.innerHTML = "";
@@ -285,9 +298,19 @@ class SwordFight extends HTMLElement {
             modClass = "negative";
           }
 
+          // Check if this move gets a modifier due to the last round's results
+          let modifier = this.applyModifiers(move, myModifier);
+
+          // If the move's modifier is not false, add a data-attribute for the modifier
+          button.setAttribute("data-modifier", modifier);
+
+
           // Set the button's innerHTML to the move's tag and name
           button.innerHTML = `<span class="move-tag">` + move.tag + `</span> ` + move.name;
-          button.innerHTML += ` <span class="move-mod ` + modClass + `">` + move.mod + `</span>`;
+          button.innerHTML += ` <span class="move-modifier ` + modClass + `">` + move.mod + `</span>`;
+          if(modifier > 0 && modifier != "false") {
+            button.innerHTML += ` <span class="round-modifier">` + modifier + `</span>`;
+          }
           li.appendChild(button);
           ul.appendChild(li);
         }
@@ -333,48 +356,35 @@ class SwordFight extends HTMLElement {
 
 
   /**
-   * logRound
-   * Log the current round
+   * applyModifiers
    *
-   * @param {string} myMove - The move my character made
-   * @param {string} opponentsMove - The move the opponent made
+   * Apply damage modifiers from the previous round
    */
-  // logRound = (myMove, opponentsMove, character, opponentsCharacter, myResult, opponentResult) => {
-  //   // Get the name of the move my character made
-  //   let myMoveName = character.moves.find(move => move.id == myMove).tag + " " + character.moves.find(move => move.id == myMove).name;
+  applyModifiers = (move, modifier) => {
+    // If the move's modifier is 0, return false
+    if(modifier == 0) {
+      return false;
+    }
 
-  //   // Get the name of the result of my move
-  //   let myResultName = myResult.name;
+    // If the move's modifier is not an array, and is greater than 0, return the modifier
+    if(!Array.isArray(modifier) && modifier > 0) {
+      return modifier;
+    }
 
-  //   // Get the name of the move the opponent made
-  //   let opponentsMoveName = opponentsCharacter.moves.find(move => move.id == opponentsMove).tag + " " + opponentsCharacter.moves.find(move => move.id == opponentsMove).name;
+    // If the move's modifier is an array, and the move's type is in the array, return the modifier from the type key
+    if(Array.isArray(modifier)) {
+      if(modifier.includes(move.type)) {
+        return modifier[move.type];
+      }
+    }
 
-  //   // Get the name of the result of the opponent's moves
-  //   let opponentResultName = opponentResult.name;
-
-  //   // Concatenate myResult.restrict into <strong> tags
-  //   let myRestrictions = "";
-  //   myResult.restrict.forEach(restriction => {
-  //     myRestrictions += "<strong>" + restriction + "</strong> ";
-  //   });
-
-  //   // Concatenate opponentResult.restrict into <strong> tags
-  //   let opponentRestrictions = "";
-  //   opponentResult.restrict.forEach(restriction => {
-  //     opponentRestrictions += "<strong>" + restriction + "</strong> ";
-  //   });
-
-  //   // Create a list item in the log
-  //   let log = document.getElementById("gameLogList");
-  //   let li = document.createElement("li");
-
-  //   li.innerHTML += `<div class="alert alert-primary">You did a ` + myMoveName + ` and your opponent was ` + myResultName + `<p>Your oponenent cannot do any ` + myRestrictions + `</div>`;
-  //   li.innerHTML += `<div class="alert alert-warning">Your opponent did a ` + opponentsMoveName + ` and you were ` + opponentResultName + `<p>You cannot do any ` + opponentRestrictions + `</div>`;
-
-  //   // Append the LI to the log
-  //   log.appendChild(li);
-  // }
-
+    // If the move's modifier is an array, and the move's tag is in the array, return the modifier from the tag key
+    if(Array.isArray(modifier)) {
+      if(modifier.includes(move.tag)) {
+        return modifier[move.tag];
+      }
+    }
+  }
 
 
   /**
@@ -413,6 +423,24 @@ class SwordFight extends HTMLElement {
     console.log("Result: ", result);
 
     return result;
+  }
+
+
+  /**
+   * randomOpponentsMove
+   * Get a random move for the opponent
+   * @param {string} result - The result of the last round
+   * @returns {string} - The move the opponent made
+   */
+  randomOpponentsMove = (lastResult) => {
+    // Look up the results table for the current result
+    let result = this.opponentsCharacter.results.find(result => result.id == lastResult);
+
+    // Get the opponent's available moves
+    let moves = this.filterMoves(this.opponentsCharacter.moves, result);
+
+    // Get a random move from the opponent's moves
+    return moves[Math.floor(Math.random() * moves.length)].id;
   }
 }
 

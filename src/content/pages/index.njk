@@ -4,78 +4,82 @@ title: Swordfight.me
 ---
 
 <sword-fight>
-
-  {#
-    #recap
-
-    The recap section will display a summary of the player's actions and the opponent's actions, and the results
-    of those actions.
-  #}
-  <aside id="recap" class="recap">
-    <h2>Recap</h2>
-    <ul id="recapList">
-    </ul>
-  </aside>
-
-
-<div class="row">
-  <div class="col-7">
+  <template id="swordFightTemplate">
 
     {#
-      #yourOpponent
+      #recap
 
-      The main section of the game where the player will see their opponent's name, health,
-      and a first-person perspective of their opponent.
+      The recap section will display a summary of the player's actions and the opponent's actions, and the results
+      of those actions.
     #}
-    <article id="yourOpponent">
-      <section>
+    <aside id="recap" class="recap">
+      <h2>Recap</h2>
+      <ul id="recapList">
+      </ul>
+    </aside>
 
-          {# Your oppponent's name #}
-          <h2>Your Opponent</h2>
-          <p id="opponentsName"><span class="placeholder col-8"></span></p>
 
-          {# Your oppponent's health #}
+    <div class="row">
+      <div class="col-7">
+
+        {#
+          #yourOpponent
+
+          The main section of the game where the player will see their opponent's name, health,
+          and a first-person perspective of their opponent.
+        #}
+        <article id="yourOpponent">
+          <section>
+
+              {# Your oppponent's name #}
+              <h2>Your Opponent</h2>
+              <p id="opponentsName"><span class="placeholder col-8"></span></p>
+
+              {# Your oppponent's health #}
+              <h3>Health:</h3>
+              <p id="opponentsHealth"><span class="placeholder col-8"></span></p>
+
+            {# Your first-person perspectve view of your opponent #}
+            <h2>You see your opponent:</h2>
+            <div class="alert alert-secondary" id="myView">
+              <div id="currentRange"></div>
+              <span class="placeholder col-8"></span>
+            </div>
+
+          </section>
+        </article>
+
+      </div>
+      <div class="col-5">
+
+      {#
+        #yourSelf
+
+        The character sheet will display the player's name, health, and a list of moves that the player can use.
+      #}
+      <article id="mySelf" class="character-sheet">
+        <section>
+
+          {# Your name #}
+          <h2>You</h2>
+          <p id="myName"><span class="placeholder col-8"></span></p>
+
+          {# Your health #}
           <h3>Health:</h3>
-          <p id="opponentsHealth"><span class="placeholder col-8"></span></p>
+          <p id="myHealth"><span class="placeholder col-8"></span></p>
 
-        {# Your first-person perspectve view of your opponent #}
-        <h2>You see your opponent:</h2>
-        <div class="alert alert-secondary" id="myView">
-          <span class="placeholder col-8"></span>
-        </div>
+          {# Your list of moves #}
+        </section>
 
-      </section>
-    </article>
+        {# Your list of moves #}
+        <ul id="myMoves">
+        </ul>
 
-  </div>
-  <div class="col-5">
+      </article>
 
-  {#
-    #yourSelf
-
-    The character sheet will display the player's name, health, and a list of moves that the player can use.
-  #}
-  <aside id="mySelf" class="character-sheet">
-    <section>
-
-      {# Your name #}
-      <h2>You</h2>
-      <p id="myName"><span class="placeholder col-8"></span></p>
-
-      {# Your health #}
-      <h3>Health:</h3>
-      <p id="myHealth"><span class="placeholder col-8"></span></p>
-    </section>
-
-    {# Your list of moves #}
-    <ul id="myMoves">
-    </ul>
-
-  </aside>
-
+      </div>
     </div>
-  </div>
 
-
+  </template>
 </sword-fight>
 {% script "src/assets/scripts/webcomponents/sword-fight.js" | url %}
