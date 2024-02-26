@@ -2,11 +2,13 @@
 $enable-rounded: false;
 
 /** Colors **/
-$primary: #7950f2;
+$primary: cornflowerblue;
+$secondary: darkred;
 $light: silver;
 
 /** Override or add colors **/
 $custom-theme-colors: (
   "primary": $primary,
+  "secondary": $secondary,
   "light": $light,
 );

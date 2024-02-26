@@ -3,12 +3,12 @@
 }
 
 .profiles {
-  @extend .row, .row-cols-2, .g-4;
+  @extend .row, .row-cols-1, .row-cols-lg-2, .g-lg-4;
 }
 
 #myProfile,
 #opponentsProfile {
-  @extend .text-center, .p-2, .col;
+  @extend .text-center, .p-2;
 
   h2,
   h3,
@@ -31,9 +31,8 @@
   }
 
   .card-body {
-    @extend .d-flex, .justify-content-between;
+    @extend .d-flex, .flex-column, .flex-lg-row, .justify-content-between;
   }
-
 }
 
 #myProfile {

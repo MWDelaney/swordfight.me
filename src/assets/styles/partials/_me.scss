@@ -22,7 +22,7 @@
   @extend .btn, .btn-primary, .d-block, .w-100;
 }
 
-.move-mod {
+.move-modifier {
   @extend .badge;
 
   &.positive {
@@ -32,6 +32,10 @@
   &.negative {
     @extend .bg-danger;
   }
+}
+
+.move-tag {
+  @extend .visually-hidden;
 }
 
 #myView {
