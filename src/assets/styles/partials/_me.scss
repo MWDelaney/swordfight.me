@@ -1,5 +1,5 @@
 #myMoves {
-  @extend .list-unstyled;
+  @extend .list-unstyled, .row, .row-cols-1, .row-cols-md-4, .g-4;
 }
 
 .moves-tag {
@@ -15,6 +15,10 @@
     li {
       @extend .mb-2;
     }
+  }
+
+  .card {
+    @extend .bg-light, .text-dark;
   }
 }
 

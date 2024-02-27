@@ -271,16 +271,30 @@ class SwordFight extends HTMLElement {
 
     // Create a header and a list for each tag
     tags.forEach(tag => {
-      let container = document.createElement("div");
+
+      // Create the moves tag container (list item)
+      let container = document.createElement("li");
       container.classList.add("moves-tag");
+      container.classList.add("col");
+      myMovesList.appendChild(container);
+
+      // Add an inner wrapper for styling
+      let innerWrapper = document.createElement("div");
+      innerWrapper.classList.add("card");
+      container.appendChild(innerWrapper);
+
+      // Create card-body for the tag
+      let cardBody = document.createElement("div");
+      cardBody.classList.add("card-body");
+      innerWrapper.appendChild(cardBody);
 
       let h3 = document.createElement("h3");
+      h3.classList.add("card-title");
       h3.innerHTML = tag;
-      container.appendChild(h3);
+      cardBody.appendChild(h3);
 
       let ul = document.createElement("ul");
-      container.appendChild(ul);
-      myMovesList.appendChild(container);
+      cardBody.appendChild(ul);
 
       myMoves.forEach(move => {
         if(move.tag == tag) {

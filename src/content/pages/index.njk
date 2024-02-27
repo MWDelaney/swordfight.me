@@ -7,15 +7,15 @@ title: Swordfight.me
   <template id="swordFightTemplate">
     <div id="gameWrapper">
 
+      <h2>Characters</h2>
       <div class="profiles">
-
         <section class="col" id="myProfile">
           <div class="card">
             <div class="card-body">
 
               {# Your name #}
               <div>
-                <h2>You:</h2>
+                <h3>You:</h3>
                 <p id="myName"><span class="placeholder col-8"></span></p>
               </div>
 
@@ -34,7 +34,7 @@ title: Swordfight.me
 
             <div>
               {# Your oppponent's name #}
-              <h2>Opponent:</h2>
+              <h3>Opponent:</h3>
               <p id="opponentsName"><span class="placeholder col-8"></span></p>
             </div>
 
@@ -50,6 +50,9 @@ title: Swordfight.me
 
       </div>
 
+      <hr>
+
+
     {#
       #recap
 
@@ -57,7 +60,7 @@ title: Swordfight.me
       of those actions.
     #}
     <aside id="recap" class="recap">
-      <h2>Recap</h2>
+      <h2>Recap of the round that just happened</h2>
       <ul id="recapList">
       </ul>
     </aside>
@@ -72,22 +75,23 @@ title: Swordfight.me
       <p id="theRange"><span class="placeholder col-8"></span></p>
     </div>
 
+    <hr>
 
-        {#
-          #yourOpponent
+    {#
+      #yourOpponent
 
-          The main section of the game where the player will see their opponent's name, health,
-          and a first-person perspective of their opponent.
-        #}
-        <article id="yourOpponent">
-            {# Your first-person perspectve view of your opponent #}
-            <h2>You see your opponent:</h2>
-            <div class="alert alert-secondary" id="myView">
-              <span class="placeholder col-8"></span>
-            </div>
+      The main section of the game where the player will see their opponent's name, health,
+      and a first-person perspective of their opponent.
+    #}
+    <article id="yourOpponent">
+        {# Your first-person perspectve view of your opponent #}
+        <h2>You see your opponent:</h2>
+        <div class="alert alert-secondary" id="myView">
+          <span class="placeholder col-8"></span>
+        </div>
+    </article>
 
-        </article>
-
+    <hr>
 
       {#
         #yourSelf
@@ -96,6 +100,7 @@ title: Swordfight.me
       #}
       <article id="mySelf" class="character-sheet">
         {# Your list of moves #}
+        <h2>Choose a move for your next round:</h2>
         <ul id="myMoves">
         </ul>
 
